@@ -8,14 +8,32 @@
 
 ### 실행방법
 아래는 flyinglet을 다운로드하고 등록하는 절차입니다.
+1. 터미널을 열고 다음 명령어를 입력하여 git을 설치합니다.
+```bash
+sudo apt-get install git 
+```
 
-flyinglet 파일을 다운로드합니다.
+2. 파일을 다운로드 받을 디렉토리로 이동합니다.
+```bash
+cd /path/to/download/dir
+```
 
-다운로드 된 파일이 있는 디렉토리로 이동합니다.
+3. git을 사용하여 flyinglet-device-authentication 을 다운로드 합니다.
+```bash
+git clone https://github.com/IN-TEGRIT/flyinglet-device-authentication.git
+```
 
-터미널을 열고 "./파일명" 명령어를 입력하여 flyinglet을 실행합니다.
+4. 다운로드된 flyinglet-device-authentication 디렉토리로 이동합니다.
+```bash
+cd flyinglet-device-authentication
+```
 
-flyinglet 실행 후, 등록하려는 f-code와 secret key를 입력합니다.
+6. flyinglet-device-authentication 을 실행합니다.
+```bash
+./flyinglet-device-authentication
+```
+
+7. 실행 후, 등록하려는 f-code와 secret key를 입력합니다.
 
 등록이 완료되면 flyinglet을 사용할 수 있습니다.
 
