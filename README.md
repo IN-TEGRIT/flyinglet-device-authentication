@@ -7,7 +7,8 @@
 * This project enables authentication of a robot using its F-code and secret key. Once authenticated, the robot device information is securely transmitted to the server for further processing and control.
 
 ### 실행방법
-아래는 flyinglet을 다운로드하고 등록하는 절차입니다.
+아래는 flyinglet-device-authentication 다운로드하고 등록하는 절차입니다.
+
 1. 터미널을 열고 다음 명령어를 입력하여 git을 설치합니다.
 ```bash
 sudo apt-get install git 
