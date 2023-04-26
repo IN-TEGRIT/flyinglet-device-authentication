@@ -3,7 +3,7 @@
 
 
 ### 설명
-* 이 프로젝트는 F 코드와 비밀 키를 사용하여 로봇의 인증을 가능하게 합니다. 일단 인증되면 로봇 장치 정보는 추가 처리 및 제어를 위해 서버로 안전하게 전송됩니다.
+* 이 프로젝트는 F-code와 Secret key를 사용하여 로봇의 인증을 가능하게 합니다. 일단 인증되면 로봇 장치 정보는 추가 처리 및 제어를 위해 서버로 안전하게 전송됩니다.
 * This project enables authentication of a robot using its F-code and secret key. Once authenticated, the robot device information is securely transmitted to the server for further processing and control.
 
 ### 실행방법
