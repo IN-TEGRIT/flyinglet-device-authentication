@@ -34,13 +34,19 @@ cd flyinglet-device-authentication
 ```
 <br/><br/>
   
-5. flyinglet-device-authentication 을 실행합니다.
+5. flyinglet-device-authentication 에 실행 권한을 부여합니다.
+```bash
+chmod +x ./flyinglet-device-authentication
+```
+<br/><br/>
+    
+6. flyinglet-device-authentication 을 실행합니다.
 ```bash
 ./flyinglet-device-authentication
 ```
 <br/><br/>
-  
-6. 실행 후, 등록하려는 f-code와 secret key를 입력합니다.
+
+7. 실행 후, 등록하려는 f-code와 secret key를 입력합니다.
 <br/><br/>
   
 등록이 완료되면 flyinglet을 사용할 수 있습니다.
