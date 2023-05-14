@@ -99,8 +99,9 @@ class InstallIntegrit:
                  "release": self.release,
                  "system": self.system,
                  "version": self.version,
-                 "uname": self.uname,
+                 "uname": self.uname
                  }
+        print(datas)
         requests.patch(url=urls, data=datas)
 
     def verification(self, stdscr):
@@ -187,7 +188,7 @@ class InstallIntegrit:
                 load_data = install_integrit.check_data(fcode)
                 saved_mac = load_data[0]['mac_address']
                 saved_time = load_data[0]['authentication_timestamp']
-                if self.mac_address != saved_mac or os.environ.get('AUTHENTICATION_TIMESTAMP') != saved_time:
+                if self.mac_address != saved_mac or os.environ.get('AUTHENTICATION_TIMESTAMP').strip('\"\'') != saved_time:
                     # question answer
                     question = 'Already registered F-code. Would you like to replace it with this robot? [y/n]: '
                     answer = ''
@@ -222,6 +223,7 @@ class InstallIntegrit:
                         now = datetime.datetime.now()
                         unix_time = int(time.mktime(now.timetuple()))
                         self.authentication_timestamp = unix_time
+
                         # F-code 환경변수에 저장
                         self.env_vars['AUTHENTICATION_TIMESTAMP'] = self.authentication_timestamp
                         set_key(self.env_path, 'AUTHENTICATION_TIMESTAMP', str(self.authentication_timestamp))
