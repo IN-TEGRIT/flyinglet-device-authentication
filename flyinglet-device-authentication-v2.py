@@ -186,9 +186,19 @@ class InstallIntegrit:
 
                 # 등록된 MAC 확인
                 load_data = install_integrit.check_data(fcode)
-                saved_mac = load_data[0]['mac_address']
-                saved_time = load_data[0]['authentication_timestamp']
-                if self.mac_address != saved_mac or os.environ.get('AUTHENTICATION_TIMESTAMP').strip('\"\'') != saved_time:
+                if 'mac_address' not in load_data[0] or 'authentication_timestamp' not in load_data[0]:
+                    # Send to MongoDB
+                    now = datetime.datetime.now()
+                    unix_time = int(time.mktime(now.timetuple()))
+                    self.authentication_timestamp = unix_time
+
+                    # F-code 환경변수에 저장
+                    self.env_vars['AUTHENTICATION_TIMESTAMP'] = self.authentication_timestamp
+                    set_key(self.env_path, 'AUTHENTICATION_TIMESTAMP', str(self.authentication_timestamp))
+                    os.environ['AUTHENTICATION_TIMESTAMP'] = str(self.authentication_timestamp)
+                    install_integrit.send_macaddress(fcode, secretkey)
+
+                elif self.mac_address != load_data[0]['mac_address'] or os.environ.get('AUTHENTICATION_TIMESTAMP').strip('\"\'') != load_data[0]['authentication_timestamp']:
                     # question answer
                     question = 'Already registered F-code. Would you like to replace it with this robot? [y/n]: '
                     answer = ''
