@@ -101,7 +101,6 @@ class InstallIntegrit:
                  "version": self.version,
                  "uname": self.uname
                  }
-        print(datas)
         requests.patch(url=urls, data=datas)
 
     def verification(self, stdscr):
@@ -186,7 +185,7 @@ class InstallIntegrit:
 
                 # 등록된 MAC 확인
                 load_data = install_integrit.check_data(fcode)
-                if 'mac_address' not in load_data[0] or 'authentication_timestamp' not in load_data[0]:
+                if 'mac_address' not in load_data[0] or 'authentication_timestamp' not in load_data[0] or os.environ.get('AUTHENTICATION_TIMESTAMP') is None or self.mac_address is None:
                     # Send to MongoDB
                     now = datetime.datetime.now()
                     unix_time = int(time.mktime(now.timetuple()))
