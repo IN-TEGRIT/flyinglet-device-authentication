@@ -31,7 +31,7 @@ class InstallIntegrit:
             with open(self.env_path) as f:
                 for line in f:
                     line = line.strip()
-                    if line and not line.startswith('#'):
+                    if line and not line.startswith('#') and len(line.split('=', 1)) == 2:
                         key, value = line.split('=', 1)
                         os.environ[key] = value
         else:
@@ -185,6 +185,7 @@ class InstallIntegrit:
 
                 # 등록된 MAC 확인
                 load_data = install_integrit.check_data(fcode)
+
                 if 'mac_address' not in load_data[0] or 'authentication_timestamp' not in load_data[0] or os.environ.get('AUTHENTICATION_TIMESTAMP') is None or self.mac_address is None:
                     # Send to MongoDB
                     now = datetime.datetime.now()
@@ -193,7 +194,7 @@ class InstallIntegrit:
 
                     # F-code 환경변수에 저장
                     self.env_vars['AUTHENTICATION_TIMESTAMP'] = self.authentication_timestamp
-                    set_key(self.env_path, 'AUTHENTICATION_TIMESTAMP', str(self.authentication_timestamp))
+                    set_key(self.env_path, 'AUTHENTICATION_TIMESTAMP', str(self.authentication_timestamp), quote_mode='never')
                     os.environ['AUTHENTICATION_TIMESTAMP'] = str(self.authentication_timestamp)
                     install_integrit.send_macaddress(fcode, secretkey)
 
@@ -235,7 +236,7 @@ class InstallIntegrit:
 
                         # F-code 환경변수에 저장
                         self.env_vars['AUTHENTICATION_TIMESTAMP'] = self.authentication_timestamp
-                        set_key(self.env_path, 'AUTHENTICATION_TIMESTAMP', str(self.authentication_timestamp))
+                        set_key(self.env_path, 'AUTHENTICATION_TIMESTAMP', str(self.authentication_timestamp), quote_mode='never')
                         os.environ['AUTHENTICATION_TIMESTAMP'] = str(self.authentication_timestamp)
                         install_integrit.send_macaddress(fcode, secretkey)
 
@@ -251,7 +252,7 @@ class InstallIntegrit:
                 # F-code 환경변수에 저장
                 # 1. 파일저장
                 self.env_vars['FCODE'] = fcode
-                set_key(self.env_path, 'FCODE', fcode)
+                set_key(self.env_path, 'FCODE', fcode, quote_mode='never')
 
                 # 2. os레벨 저장
                 os.environ['FCODE'] = fcode
