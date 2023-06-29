@@ -8,6 +8,8 @@ import time
 import datetime
 import json
 import platform
+import socket
+
 from dotenv import load_dotenv, set_key
 
 
@@ -26,6 +28,7 @@ class InstallIntegrit:
         self.authentication_timestamp = None
         self.env_path = os.path.expanduser('~/.flyinglet/.env')
         self.env_vars = {}
+
         if os.path.exists(self.env_path):
             # .env 파일이 존재할 경우, 해당 파일을 로드
             with open(self.env_path) as f:
@@ -41,20 +44,38 @@ class InstallIntegrit:
                 f.write('# Add your environment variables here\n')
             print(f'{self.env_path} has been created.')
 
+    def check_network_connection(timeout=3, retry_count=3):
+        # 연결 상태 확인할 호스트와 포트
+        host = "www.google.com"
+        port = 80
+        for i in range(retry_count):
+            try:
+                socket.setdefaulttimeout(timeout)
+                socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
+                return True
+            except socket.error as ex:
+                time.sleep(1)  # 1초 대기 후 재시도
+
+        return False
+
     def argpaser(self):
-        try:
-            saved_fcode = os.environ.get('FCODE').strip('\"\'')
-            saved_authentication_timestamp = os.environ.get('AUTHENTICATION_TIMESTAMP').strip('\"\'')
-            check_data = self.check_data(saved_fcode)
-            if check_data[0]["authentication_timestamp"] == saved_authentication_timestamp:
-                pass
-            else:  # authentication_timestamp 가 일치하지 않을 경우 .env 내용 삭제
+        if self.check_network_connection(retry_count=5):
+            try:
+                saved_fcode = os.environ.get('FCODE').strip('\"\'')
+                saved_authentication_timestamp = os.environ.get('AUTHENTICATION_TIMESTAMP').strip('\"\'')
+                check_data = self.check_data(saved_fcode)
+                if check_data[0]["authentication_timestamp"] == saved_authentication_timestamp:
+                    pass
+                else:  # authentication_timestamp 가 일치하지 않을 경우 .env 내용 삭제
+                    with open(self.env_path, 'w') as f:
+                        f.write('')
+            except (Exception,):
+                # authentication_timestamp 가 일치하지 않을 경우 .env 내용 삭제
                 with open(self.env_path, 'w') as f:
                     f.write('')
-        except (Exception,):
-            # authentication_timestamp 가 일치하지 않을 경우 .env 내용 삭제
-            with open(self.env_path, 'w') as f:
-                f.write('')
+        else:
+            print("Network connection is not available.")
+            exit()
 
     def get_mac_address(self):
         # Get MAC address
@@ -84,6 +105,7 @@ class InstallIntegrit:
         datas = {"fCode": fcode}
         response = requests.post(url=urls, data=datas)
         return json.loads(response.text)
+
 
     def send_macaddress(self, fcode, secretkey):
         urls = f'https://dev.api.flyinglet.com/send-device-certi'
@@ -154,6 +176,7 @@ class InstallIntegrit:
 
             # Hide SECRET_KEY input
             secretkey = ''
+
             # curses.noecho()
             while True:
                 c = stdscr.getch()
@@ -172,7 +195,6 @@ class InstallIntegrit:
 
                     # Print SECRET_KEY to screen
                     stdscr.addch(0, len('Enter SECRET_KEY: ') + len(secretkey) - 1, '*')
-
 
             response = install_integrit.signin_device(fcode, secretkey)
 
