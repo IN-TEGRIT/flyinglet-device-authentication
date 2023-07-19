@@ -59,7 +59,7 @@ class InstallIntegrit:
         return False
 
     def argpaser(self):
-        if self.check_network_connection(retry_count=5):
+        if self.check_network_connection(retry_count=10):
             try:
                 saved_fcode = os.environ.get('FCODE').strip('\"\'')
                 saved_authentication_timestamp = os.environ.get('AUTHENTICATION_TIMESTAMP').strip('\"\'')
