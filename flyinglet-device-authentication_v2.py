@@ -303,6 +303,7 @@ class InstallIntegrit:
 if '__main__' == __name__:
     parser = argparse.ArgumentParser()
     parser.add_argument('--check', action='store_true', help='Automatically checks device authentication')
+    parser.add_argument('--version', action='version', version='v 1.2.0', help='Show the version of the script')
     args = parser.parse_args()
     install_integrit = InstallIntegrit()
     if args.check:
