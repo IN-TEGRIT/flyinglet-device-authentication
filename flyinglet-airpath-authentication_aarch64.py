@@ -9,7 +9,25 @@ import datetime
 import platform
 import socket
 from dotenv import set_key
+import logging
 
+
+# 로깅 레벨 설정 (예: INFO)
+logging.basicConfig(level=logging.INFO)
+
+# 로그 파일 경로 설정
+log_file_path = './flyinglet-device-authentication-v2.0.0.log'
+
+# 로그 핸들러 생성 (파일에 로그를 기록)
+file_handler = logging.FileHandler(log_file_path)
+
+# 로그 포매터 설정 (원하는 형식으로 로그를 출력)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+# 로거 생성 및 핸들러 추가
+logger = logging.getLogger(__name__)
+logger.addHandler(file_handler)
 
 class InstallIntegrit:
     def __init__(self):
@@ -31,6 +49,7 @@ class InstallIntegrit:
 
         if os.path.exists(self.env_path):
             # .env 파일이 존재할 경우, 해당 파일을 로드
+            logger.info("/.env 파일 있음...")
             with open(self.env_path) as f:
                 for line in f:
                     line = line.strip()
@@ -39,9 +58,12 @@ class InstallIntegrit:
                         os.environ[key] = value
         else:
             # .env 파일이 존재하지 않을 경우, 생성
+            logger.info("/.env 파일 없음...")
             os.makedirs(os.path.dirname(self.env_path), exist_ok=True)
             with open(self.env_path, 'w') as f:
                 f.write('# Add your environment variables here\n')
+            print(f'{self.env_path} has been created.')
+            logger.info("/.env 파일 생성함")
 
 
         # try:
@@ -74,15 +96,18 @@ class InstallIntegrit:
 
     def check_network_connection(self, timeout=3, retry_count=10):
         # 연결 상태 확인할 호스트와 포트
+        logger.info("네트워크 상태 점검")
         host = "www.google.com"
         port = 80
         for i in range(retry_count):
             try:
+                logger.info("네트워크 접속시도...")
                 socket.setdefaulttimeout(timeout)
                 socket.socket(socket.AF_INET, socket.SOCK_STREAM).connect((host, port))
                 return True
             except socket.error as ex:
                 time.sleep(1)  # 1초 대기 후 재시도
+                logger.info(f"네트워크 접속 재시도...{i+1}")
 
         return False
 
@@ -295,16 +320,16 @@ class InstallIntegrit:
                 stdscr.getch()
                 break
 
-
-
-
 if '__main__' == __name__:
     parser = argparse.ArgumentParser()
     parser.add_argument('--check', action='store_true', help='Automatically checks device authentication')
+    parser.add_argument('--version', action='version', version='2.0.0', help='Show the version of the script')
     args = parser.parse_args()
     install_integrit = InstallIntegrit()
     if args.check:
+        logger.info("--check 실행...")
         install_integrit.argpaser()
+        logger.info("--check 완료")
     else:
         # 입력 파일 인자가 없을 경우 기본 파일을 사용
         verification = install_integrit.verification
